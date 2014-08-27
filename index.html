@@ -92,8 +92,13 @@ function populate() {
           '</div>' +
         '</div>';
     });
+
     document.getElementById("result").innerHTML = dom;
 
+    optionsList.forEach(function(value) {
+      var n = value.name + "-inner";
+      document.getElementById(n).style.display = "none";
+    });
 }
 
 function init() {
