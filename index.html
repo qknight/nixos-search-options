@@ -1,0 +1,152 @@
+<html>
+<head>
+<!--  
+<script type="text/javascript" src="bootstrap.min.js"></script> 
+  <link rel="stylesheet" href="bootstrap.min.css" />
+-->
+
+<link rel="stylesheet" href="bootstrap-responsive.min.css" />
+<link rel="stylesheet" href="nixos-site.css" type="text/css" />
+<script type="text/javascript" src="jquery.min.js"></script>
+<script type="text/javascript" src="jquery-ui.min.js"></script>
+
+<style type="text/css">
+#info {
+   display: inline-block;
+   padding: 2px 4px;
+   font-size: 11.844px;
+   font-weight: bold;
+   line-height: 14px;
+   color: #fff;
+   background-color: #468847;
+   text-shadow: 0 -1px 0 rgba(0,0,0,0.25);
+   white-space: nowrap;
+   vertical-align: baseline;
+};
+</style>
+
+
+</head>
+ <body>
+
+    <div class="navbar navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container">
+<h1> Search NixOS options</h1>
+
+<div id="obbb">
+<div id="bbb">
+<input name="query" type="text" class="search-query span3" placeholder="Search by name or description" id="search" value="" autofocus="autofocus" style="background: #fff url('share-sprite-new.png') no-repeat -269px -92px !important; padding-left: 22px !important;width: 288px; height: 22px; margin: 0px"> <div id="info">?</div> (options in selection)
+</div>
+<br>
+<input type="checkbox" id="nameCB" checked="true" onchange="update()">path,
+<input type="checkbox" id="descriptionCB" checked="true" onchange="update()">description,
+<input type="checkbox" id="defaultCB" checked="true" onchange="update()">default,
+<input type="checkbox" id="commentCB" checked="true" onchange="update()">comment,
+<input type="checkbox" id="exampleCB" checked="true" onchange="update()">example,
+<input type="checkbox" id="declarationsCB" checked="true" onchange="update()">declarations
+</div>
+
+<br>
+<br>
+<div id="bar">
+<dt><span class="term"><a id="opt-containers._name_.hostAddress" shape="rect"></a><a class="term" href="#opt-containers._name_.hostAddress" shape="rect" onclick="toggle_visibility('fff')"><code class="option">containers.&lt;name&gt;.hostAddress</code></a></span></dt>
+<dd id="fff"><p>The IPv4 address assigned to the host interface.
+</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
+null
+</code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">
+"10.231.136.1"
+</code></p></dd>
+</div>
+
+<div id="result"></a>
+
+<script type="text/javascript">
+
+var optionsList;
+
+var url = "options.JSON";
+
+function toggle_visibility(id) {
+       var e = document.getElementById(id);
+       if(e.style.display == '')
+          e.style.display = 'none';
+       else
+          e.style.display = '';
+}
+
+function init() {
+  $.getJSON("options.JSON", function(data) {
+    optionsList = data;
+    update();
+    console.log("received json");
+  })
+  .fail(function() {
+    console.log( "error downloading or parsing json" );
+  })
+}
+
+function update() {
+    // reset output
+    var t = document.getElementById("result");
+    t.innerHTML ="";
+    
+    //var name = [];
+    var filteredList= [];
+
+    var words = $('#search').val().toLowerCase().split(/ +/).filter(Boolean);
+    //console.log(words);
+    //console.log(optionsList);
+
+    var nameCB = (document.getElementById("nameCB").checked==true);
+    var descriptionCB = (document.getElementById("descriptionCB").checked==true);
+    var defaultCB = (document.getElementById("defaultCB").checked==true);
+    var commentCB = (document.getElementById("commentCB").checked==true);
+    var exampleCB = (document.getElementById("exampleCB").checked==true);
+    var declarationsCB = (document.getElementById("declarationsCB").checked==true);
+
+
+    if (words.length) {
+      filterList = optionsList.filter(function (value){
+        var name = value.name;
+        var description = value.description || ""; 
+        var default_ = value.default || ""; 
+        var comment = value.comment || "";
+        var example = value.example || "";
+        //var declarations = value.declarations || "i"; 
+
+        if (words.length > 0) {
+          function match(word) {
+            return((nameCB && (name.toLowerCase().indexOf(word) != -1))
+                || (descriptionCB && (description.toLowerCase().indexOf(word) != -1))
+                || (defaultCB && (default_.toLowerCase().indexOf(word) != -1))
+                || (commentCB && (comment.toLowerCase().indexOf(word) != -1))
+                || (exampleCB && (example.toLowerCase().indexOf(word) != -1)));
+                //|| (declarationsCB && (declarations.toLowerCase().indexOf(word) != -1)));
+            };
+          return words.every(match);
+        }
+      });
+    } else {
+      filterList = optionsList;
+    }
+
+    //console.log(filteredList);
+
+    // finally display those left
+    var dom = "";
+    filterList.map(function(value) {
+        dom += "<a href>" + value.name + "</a><br> ";
+    });
+    document.getElementById("result").innerHTML = dom;
+    document.getElementById("info").innerHTML = filterList.length;  
+}
+
+$('#search').on('input', function() {
+  update();
+});
+$( document ).ready( init() )
+</script>
+
+</body>
+</html>
