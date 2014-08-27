@@ -82,13 +82,18 @@ function populate() {
               '<p>' + value.description + '</p>' +
               '<p><span class="emphasis"><em>Default:</em></span> <code class="literal">' + value.default + '</code></p>' +
               '<p><span class="emphasis"><em>Example:</em></span> <code class="literal">' + value.example + '</code></p>' +
+              '<table class="simplelist" border="0" summary="Simple list"><tbody>';
+      for (var i = 0; i < value.declarations.length; i++) {
+        dom += '' +
+                '<tr><td rowspan="1" colspan="1"><code class="filename">' +
+                   '<a class="filename" href="' + nixpkgsRepo + value.declarations[i] + '" target="_top" shape="rect">' +
+                     ' &lt;' + value.declarations[i] + '&gt; ' +
+                   '</a>' +
+                '</code></td></tr>';
+      }
+      dom += '' +
+              '</tbody></table>' +
             '</dd> ' +
-            '<p><span class="emphasis"><em>Declared by:</em></span></p>' +
-            '<table class="simplelist" border="0" summary="Simple list"><tbody>' +
-              '<tr><td rowspan="1" colspan="1"><code class="filename">' +
-                 '<a class="filename" href="' + nixpkgsRepo + value.declarations[0] + '" target="_top" shape="rect"> &lt;' + value.declarations[0] + '&gt; </a>' +
-              '</code></td></tr>' +
-            '</tbody></table>' +
           '</div>' +
         '</div>';
     });
