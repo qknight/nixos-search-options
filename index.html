@@ -71,11 +71,12 @@ function populate() {
     var dom = "";
     optionsList.map(function(value) {
 
+      name = value.name.replace('<', '&lt;').replace('>', '&gt;');
       dom += '' +
         '<div id="' + value.name + '">' +
           '<dt><span class="term">' +
             '<a class="term" href="#" shape="rect" onclick="toggle_visibility(\'' + value.name + '-inner\')"><code class="option">' +
-            value.name +
+              name +
             '</code></a>' +
           '</span></dt>' +
           '<dd id="' + value.name + '-inner">' +
