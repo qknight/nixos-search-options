@@ -57,7 +57,7 @@
 var optionsList;
 var collapsedList;
 
-var url = "options.JSON";
+var optionsJSON = "./options.json";
 
 function toggle_visibility(id) {
        var e = document.getElementById(id);
@@ -68,14 +68,22 @@ function toggle_visibility(id) {
 }
 
 function init() {
-  $.getJSON("options.JSON", function(data) {
-    optionsList = data;
-    update();
-    console.log("received json");
-  })
-  .fail(function() {
+  function onError(e) {
     console.log( "error downloading or parsing json" );
-  })
+  }
+
+  function onLoad(e) {
+    console.log("received json");
+    optionsList = JSON.parse(req.responseText);
+    console.log("parsed json");
+    update();
+  }
+
+  var req = new XMLHttpRequest();
+  req.open("GET", optionsJSON, true);
+  req.onload = onLoad;
+  req.onerror = onError;
+  req.send(null);
 }
 
 function update() {
