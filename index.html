@@ -69,29 +69,45 @@ function populate() {
     var dom = "";
     optionsList.forEach(function(value) {
 
-      name = value.name.replace('<', '&lt;').replace('>', '&gt;');
+      var innerTagId = value.name + '-inner';
+      var name = value.name.replace('<', '&lt;').replace('>', '&gt;');
       dom += '' +
         '<div id="' + value.name + '">' +
           '<dt><span class="term">' +
-            '<a class="term" href="javascript:void(0);" shape="rect" onclick="toggle_visibility(\'' + value.name + '-inner\')"><code class="option">' +
+            '<a class="term" href="javascript:void(0);" shape="rect" onclick="toggle_visibility(\'' + innerTagId + '\')"><code class="option">' +
               name +
             '</code></a>' +
           '</span></dt>' +
-          '<dd id="' + value.name + '-inner">' +
-            '<p>' + value.description + '</p>' +
-            '<p><span class="emphasis"><em>Default:</em></span> <code class="literal">' + value.default + '</code></p>' +
-            '<p><span class="emphasis"><em>Example:</em></span> <code class="literal">' + value.example + '</code></p>' +
-            '<table class="simplelist" border="0" summary="Simple list"><tbody>';
-      for (var i = 0; i < value.declarations.length; i++) {
+          '<dd id="' + innerTagId + '">' +
+            '<p>' + value.description + '</p>';
+
+      // Write the default value if it exists.
+      if (value.default)
         dom += '' +
+            '<p><span class="emphasis"><em>Default:</em></span> <code class="literal">' + value.default + '</code></p>';
+
+      // Write the example value if it exists.
+      if (value.example)
+        dom += '' +
+            '<p><span class="emphasis"><em>Example:</em></span> <code class="literal">' + value.example + '</code></p>';
+
+      // If we know any of the files in which this option is declared.
+      if (value.declarations.length) {
+        dom += '' +
+            '<table class="simplelist" border="0" summary="Simple list"><tbody>';
+        // Then list and align all the declarations.
+        for (var i = 0; i < value.declarations.length; i++) {
+          dom += '' +
               '<tr><td rowspan="1" colspan="1"><code class="filename">' +
                  '<a class="filename" href="' + nixpkgsRepo + value.declarations[i] + '" target="_top" shape="rect">' +
                    ' &lt;' + value.declarations[i] + '&gt; ' +
                  '</a>' +
               '</code></td></tr>';
+        }
+        dom += '' +
+            '</tbody></table>';
       }
       dom += '' +
-            '</tbody></table>' +
           '</dd> ' +
         '</div>';
     });
