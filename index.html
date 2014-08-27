@@ -100,12 +100,12 @@ function update() {
 
     if (words.length) {
       filterList = optionsList.filter(function (value){
-        var name = value.name;
-        var description = value.description || ""; 
-        var default_ = value.default || ""; 
-        var comment = value.comment || "";
-        var example = value.example || "";
-        var declarations = value.declarations || "i"; 
+        var name = value.name + "";
+        var description = (value.description || "") + "";
+        var default_ = (value["default"] || "") + "";
+        var comment = (value.comment || "") + "";
+        var example = (value.example || "") + "";
+        var declarations = (value.declarations || "") + "";
 
         if (words.length > 0) {
           function match(word) {
@@ -113,8 +113,8 @@ function update() {
                 || (descriptionCB && (description.toLowerCase().indexOf(word) != -1))
                 || (defaultCB && (default_.toLowerCase().indexOf(word) != -1))
                 || (commentCB && (comment.toLowerCase().indexOf(word) != -1))
-                || (exampleCB && (example.toLowerCase().indexOf(word) != -1)));
-                //|| (declarationsCB && (declarations.toLowerCase().indexOf(word) != -1)));
+                || (exampleCB && (example.toLowerCase().indexOf(word) != -1))
+                || (declarationsCB && (declarations.toLowerCase().indexOf(word) != -1)));
             };
           return words.every(match);
         }
