@@ -69,7 +69,7 @@ function toggle_visibility(id) {
 
 function populate() {
     var dom = "";
-    optionsList.map(function(value) {
+    optionsList.forEach(function(value) {
 
       name = value.name.replace('<', '&lt;').replace('>', '&gt;');
       dom += '' +
