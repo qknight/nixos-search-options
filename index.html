@@ -40,7 +40,6 @@
 <input type="checkbox" id="nameCB" checked="true" onchange="update()">path,
 <input type="checkbox" id="descriptionCB" checked="true" onchange="update()">description,
 <input type="checkbox" id="defaultCB" checked="true" onchange="update()">default,
-<input type="checkbox" id="commentCB" checked="true" onchange="update()">comment,
 <input type="checkbox" id="exampleCB" checked="true" onchange="update()">example,
 <input type="checkbox" id="declarationsCB" checked="true" onchange="update()">declarations
 </div>
@@ -150,7 +149,6 @@ function partitionSearch() {
   var nameCB = (document.getElementById("nameCB").checked == true);
   var descriptionCB = (document.getElementById("descriptionCB").checked == true);
   var defaultCB = (document.getElementById("defaultCB").checked == true);
-  var commentCB = (document.getElementById("commentCB").checked == true);
   var exampleCB = (document.getElementById("exampleCB").checked == true);
   var declarationsCB = (document.getElementById("declarationsCB").checked == true);
 
@@ -161,7 +159,6 @@ function partitionSearch() {
     var name = value.name + "";
     var description = (value.description || "") + "";
     var default_ = (value["default"] || "") + "";
-    var comment = (value.comment || "") + "";
     var example = (value.example || "") + "";
     var declarations = (value.declarations || "") + "";
 
@@ -169,7 +166,6 @@ function partitionSearch() {
       return((nameCB && (name.toLowerCase().indexOf(word) != -1))
           || (descriptionCB && (description.toLowerCase().indexOf(word) != -1))
           || (defaultCB && (default_.toLowerCase().indexOf(word) != -1))
-          || (commentCB && (comment.toLowerCase().indexOf(word) != -1))
           || (exampleCB && (example.toLowerCase().indexOf(word) != -1))
           || (declarationsCB && (declarations.toLowerCase().indexOf(word) != -1)));
     };
