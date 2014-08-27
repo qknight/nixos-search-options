@@ -49,21 +49,13 @@
 
 <br>
 <br>
-<div id="bar">
-<dt><span class="term"><a id="opt-containers._name_.hostAddress" shape="rect"></a><a class="term" href="#opt-containers._name_.hostAddress" shape="rect" onclick="toggle_visibility('fff')"><code class="option">containers.&lt;name&gt;.hostAddress</code></a></span></dt>
-<dd id="fff"><p>The IPv4 address assigned to the host interface.
-</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">
-null
-</code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">
-"10.231.136.1"
-</code></p></dd>
-</div>
 
 <div id="result"></a>
 
 <script type="text/javascript">
 
 var optionsList;
+var collapsedList;
 
 var url = "options.JSON";
 
@@ -113,7 +105,7 @@ function update() {
         var default_ = value.default || ""; 
         var comment = value.comment || "";
         var example = value.example || "";
-        //var declarations = value.declarations || "i"; 
+        var declarations = value.declarations || "i"; 
 
         if (words.length > 0) {
           function match(word) {
@@ -130,13 +122,23 @@ function update() {
     } else {
       filterList = optionsList;
     }
-
+    //filterList.
     //console.log(filteredList);
 
     // finally display those left
     var dom = "";
+    var v = "";
     filterList.map(function(value) {
-        dom += "<a href>" + value.name + "</a><br> ";
+      //  dom += "<a href>" + value.name + "</a><br> ";
+
+
+dom += " <dt><span class=\"term\"><a id=\"foo\" shape=\"rect\"></a><a class=\"term\" href=\"\" shape=\"rect\" onclick=\"toggle_visibility('fff')\"><code class=\"option\">" + value.name + "</code></a></span></dt> \
+<dd id=\"fff\"><p>" + value.description + 
+"</p><p><span class=\"emphasis\"><em>Default:</em></span> <code class=\"literal\">" + value.default + 
+"</code></p><p><span class=\"emphasis\"><em>Example:</em></span> <code class=\"literal\">" + value.example + "</code></p></dd> " +
+"<p><span class=\"emphasis\"><em>Declared by:</em></span></p>" +
+"<table class=\"simplelist\" border=\"0\" summary=\"Simple list\"><tbody><tr><td rowspan=\"1\" colspan=\"1\"><code class=\"filename\"><a class=\"filename\" href=\"https://github.com/NixOS/nixpkgs/blob/2b270536954cd4c2dbda62d7589c84f3a2f33009/nixos/modules/config/shells-environment.nix\" target=\"_top\" shape=\"rect\"> &lt;nixpkgs/nixos/modules/config/shells-environment.nix&gt; </a></code></td></tr></tbody></table>\"";
+
     });
     document.getElementById("result").innerHTML = dom;
     document.getElementById("info").innerHTML = filterList.length;  
