@@ -138,55 +138,64 @@ function init() {
   req.send(null);
 }
 
+function partitionSearch() {
+  var words = searchField.value.toLowerCase().split(/ +/).filter(Boolean);
+
+  if (!words.length)
+    return { match: optionsList, miss: [] };
+
+  var match = [];
+  var miss = [];
+
+  var nameCB = (document.getElementById("nameCB").checked == true);
+  var descriptionCB = (document.getElementById("descriptionCB").checked == true);
+  var defaultCB = (document.getElementById("defaultCB").checked == true);
+  var commentCB = (document.getElementById("commentCB").checked == true);
+  var exampleCB = (document.getElementById("exampleCB").checked == true);
+  var declarationsCB = (document.getElementById("declarationsCB").checked == true);
+
+  var len = optionsList.length;
+  for (var i = 0; i < len; i++) {
+    var value = optionsList[i];
+
+    var name = value.name + "";
+    var description = (value.description || "") + "";
+    var default_ = (value["default"] || "") + "";
+    var comment = (value.comment || "") + "";
+    var example = (value.example || "") + "";
+    var declarations = (value.declarations || "") + "";
+
+    function matchWord(word) {
+      return((nameCB && (name.toLowerCase().indexOf(word) != -1))
+          || (descriptionCB && (description.toLowerCase().indexOf(word) != -1))
+          || (defaultCB && (default_.toLowerCase().indexOf(word) != -1))
+          || (commentCB && (comment.toLowerCase().indexOf(word) != -1))
+          || (exampleCB && (example.toLowerCase().indexOf(word) != -1))
+          || (declarationsCB && (declarations.toLowerCase().indexOf(word) != -1)));
+    };
+
+    if (words.every(matchWord))
+      match.push(value);
+    else
+      miss.push(value);
+  }
+
+  return { match: match, miss: miss };
+}
+
 function update() {
-    var filteredList= [];
-
-    var words = searchField.value.toLowerCase().split(/ +/).filter(Boolean);
-    //console.log(words);
-    //console.log(optionsList);
-
-    var nameCB = (document.getElementById("nameCB").checked==true);
-    var descriptionCB = (document.getElementById("descriptionCB").checked==true);
-    var defaultCB = (document.getElementById("defaultCB").checked==true);
-    var commentCB = (document.getElementById("commentCB").checked==true);
-    var exampleCB = (document.getElementById("exampleCB").checked==true);
-    var declarationsCB = (document.getElementById("declarationsCB").checked==true);
-
-    if (words.length) {
-      filterList = optionsList.filter(function (value){
-        var name = value.name + "";
-        var description = (value.description || "") + "";
-        var default_ = (value["default"] || "") + "";
-        var comment = (value.comment || "") + "";
-        var example = (value.example || "") + "";
-        var declarations = (value.declarations || "") + "";
-
-        if (words.length > 0) {
-          function match(word) {
-            return((nameCB && (name.toLowerCase().indexOf(word) != -1))
-                || (descriptionCB && (description.toLowerCase().indexOf(word) != -1))
-                || (defaultCB && (default_.toLowerCase().indexOf(word) != -1))
-                || (commentCB && (comment.toLowerCase().indexOf(word) != -1))
-                || (exampleCB && (example.toLowerCase().indexOf(word) != -1))
-                || (declarationsCB && (declarations.toLowerCase().indexOf(word) != -1)));
-            };
-          return words.every(match);
-        }
-      });
-    } else {
-      filterList = optionsList;
-    }
-
-    //console.log(filteredList);
+    var partition = partitionSearch();
 
     // finally display those left
-    optionsList.forEach(function(value) {
+    partition.miss.forEach(function(value) {
       document.getElementById(value.name).style.display = "none";
     });
-    filterList.forEach(function(value) {
+
+    partition.match.forEach(function(value) {
       document.getElementById(value.name).style.display = "";
     });
-    document.getElementById("info").innerHTML = filterList.length;  
+
+    document.getElementById("info").innerHTML = partition.match.length;
 }
 
 // Call the init function once the body is loaded.
