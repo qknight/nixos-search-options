@@ -140,12 +140,12 @@ function update() {
       //  dom += "<a href>" + value.name + "</a><br> ";
 
 
-dom += " <dt><span class=\"term\"><a id=\"foo\" shape=\"rect\"></a><a class=\"term\" href=\"\" shape=\"rect\" onclick=\"toggle_visibility('fff')\"><code class=\"option\">" + value.name + "</code></a></span></dt> \
-<dd id=\"fff\"><p>" + value.description + 
-"</p><p><span class=\"emphasis\"><em>Default:</em></span> <code class=\"literal\">" + value.default + 
-"</code></p><p><span class=\"emphasis\"><em>Example:</em></span> <code class=\"literal\">" + value.example + "</code></p></dd> " +
-"<p><span class=\"emphasis\"><em>Declared by:</em></span></p>" +
-"<table class=\"simplelist\" border=\"0\" summary=\"Simple list\"><tbody><tr><td rowspan=\"1\" colspan=\"1\"><code class=\"filename\"><a class=\"filename\" href=\"https://github.com/NixOS/nixpkgs/blob/2b270536954cd4c2dbda62d7589c84f3a2f33009/nixos/modules/config/shells-environment.nix\" target=\"_top\" shape=\"rect\"> &lt;nixpkgs/nixos/modules/config/shells-environment.nix&gt; </a></code></td></tr></tbody></table>\"";
+      dom += ' <dt><span class="term"><a id="foo" shape="rect"></a><a class="term" href="" shape="rect" onclick="toggle_visibility('fff')"><code class="option">" + value.name + "</code></a></span></dt> \
+<dd id="fff"><p>' + value.description +
+'</p><p><span class="emphasis"><em>Default:</em></span> <code class="literal">' + value["default"] +
+'</code></p><p><span class="emphasis"><em>Example:</em></span> <code class="literal">' + value.example + '</code></p></dd> ' +
+'<p><span class="emphasis"><em>Declared by:</em></span></p>' +
+'<table class="simplelist" border="0" summary="Simple list"><tbody><tr><td rowspan="1" colspan="1"><code class="filename"><a class="filename" href="https://github.com/NixOS/nixpkgs/blob/2b270536954cd4c2dbda62d7589c84f3a2f33009/nixos/modules/config/shells-environment.nix" target="_top" shape="rect"> &lt;nixpkgs/nixos/modules/config/shells-environment.nix&gt; </a></code></td></tr></tbody></table>"';
 
     });
     document.getElementById("result").innerHTML = dom;
