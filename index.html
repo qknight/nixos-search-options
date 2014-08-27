@@ -55,7 +55,6 @@
 <script type="text/javascript">
 
 var optionsList;
-var collapsedList;
 
 var optionsJSON = "./options.json";
 
@@ -67,6 +66,24 @@ function toggle_visibility(id) {
           e.style.display = '';
 }
 
+function populate() {
+    var dom = "";
+    optionsList.map(function(value) {
+
+
+
+dom += "<div id=\"" + value.name + "\">" +  " <dt><span class=\"term\"><a class=\"term\" shape=\"rect\"><code class=\"option\"><a href=\"#\" onclick=\"toggle_visibility('" + value.name + "foo" + "')\">" + value.name + "</a></code></span></dt> \
+<div id=\"" + value.name + "foo" + "\"><dd><p>" + value.description + 
+"</p><p><span class=\"emphasis\"><em>Default:</em></span> <code class=\"literal\">" + value.default + 
+"</code></p><p><span class=\"emphasis\"><em>Example:</em></span> <code class=\"literal\">" + value.example + "</code></p></dd> " +
+"<p><span class=\"emphasis\"><em>Declared by:</em></span></p>" +
+"<table class=\"simplelist\" border=\"0\" summary=\"Simple list\"><tbody><tr><td rowspan=\"1\" colspan=\"1\"><code class=\"filename\"><a class=\"filename\" href=\"https://github.com/NixOS/nixpkgs/blob/2b270536954cd4c2dbda62d7589c84f3a2f33009/nixos/modules/config/shells-environment.nix\" target=\"_top\" shape=\"rect\"> &lt;nixpkgs/nixos/modules/config/shells-environment.nix&gt; </a></code></td></tr></tbody></table></div></div>";
+
+    });
+    document.getElementById("result").innerHTML = dom;
+
+}
+
 function init() {
   function onError(e) {
     console.log( "error downloading or parsing json" );
@@ -76,6 +93,9 @@ function init() {
     console.log("received json");
     optionsList = JSON.parse(req.responseText);
     console.log("parsed json");
+
+    populate();
+
     update();
   }
 
@@ -87,11 +107,6 @@ function init() {
 }
 
 function update() {
-    // reset output
-    var t = document.getElementById("result");
-    t.innerHTML ="";
-    
-    //var name = [];
     var filteredList= [];
 
     var words = $('#search').val().toLowerCase().split(/ +/).filter(Boolean);
@@ -104,7 +119,6 @@ function update() {
     var commentCB = (document.getElementById("commentCB").checked==true);
     var exampleCB = (document.getElementById("exampleCB").checked==true);
     var declarationsCB = (document.getElementById("declarationsCB").checked==true);
-
 
     if (words.length) {
       filterList = optionsList.filter(function (value){
@@ -130,25 +144,17 @@ function update() {
     } else {
       filterList = optionsList;
     }
-    //filterList.
+
     //console.log(filteredList);
 
     // finally display those left
-    var dom = "";
-    var v = "";
-    filterList.map(function(value) {
-      //  dom += "<a href>" + value.name + "</a><br> ";
 
-
-dom += " <dt><span class=\"term\"><a id=\"foo\" shape=\"rect\"></a><a class=\"term\" href=\"\" shape=\"rect\" onclick=\"toggle_visibility('fff')\"><code class=\"option\">" + value.name + "</code></a></span></dt> \
-<dd id=\"fff\"><p>" + value.description + 
-"</p><p><span class=\"emphasis\"><em>Default:</em></span> <code class=\"literal\">" + value.default + 
-"</code></p><p><span class=\"emphasis\"><em>Example:</em></span> <code class=\"literal\">" + value.example + "</code></p></dd> " +
-"<p><span class=\"emphasis\"><em>Declared by:</em></span></p>" +
-"<table class=\"simplelist\" border=\"0\" summary=\"Simple list\"><tbody><tr><td rowspan=\"1\" colspan=\"1\"><code class=\"filename\"><a class=\"filename\" href=\"https://github.com/NixOS/nixpkgs/blob/2b270536954cd4c2dbda62d7589c84f3a2f33009/nixos/modules/config/shells-environment.nix\" target=\"_top\" shape=\"rect\"> &lt;nixpkgs/nixos/modules/config/shells-environment.nix&gt; </a></code></td></tr></tbody></table>\"";
-
+    optionsList.forEach(function(value) {
+      document.getElementById(value.name).style.display = "none";
     });
-    document.getElementById("result").innerHTML = dom;
+    filterList.forEach(function(value) {
+      document.getElementById(value.name).style.display = "";
+    });
     document.getElementById("info").innerHTML = filterList.length;  
 }
 
