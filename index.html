@@ -7,8 +7,6 @@
 
 <link rel="stylesheet" href="bootstrap-responsive.min.css" />
 <link rel="stylesheet" href="nixos-site.css" type="text/css" />
-<script type="text/javascript" src="jquery.min.js"></script>
-<script type="text/javascript" src="jquery-ui.min.js"></script>
 
 <style type="text/css">
 #info {
@@ -58,6 +56,7 @@ var optionsList;
 
 var optionsJSON = "./options.json";
 var nixpkgsRepo = "https://github.com/NixOS/nixpkgs/tree/master/";
+var searchField;
 
 function toggle_visibility(id) {
        var e = document.getElementById(id);
@@ -107,6 +106,9 @@ function populate() {
 }
 
 function init() {
+  // Find the search field in the document.
+  searchField = document.getElementById("search");
+
   function onError(e) {
     console.log( "error downloading or parsing json" );
   }
@@ -116,11 +118,19 @@ function init() {
     optionsList = JSON.parse(req.responseText);
     console.log("parsed json");
 
+    // Convert the content of the JSON file into DOM elements.
     populate();
 
+    // Once the content is available, call the update function when the search
+    // field content is changed.
+    searchField.oninput = update;
+
+    // In case the user has already typed some input, call the update function
+    // to update the output.
     update();
   }
 
+  // Request the JSON file produced while generating nixos manual.
   var req = new XMLHttpRequest();
   req.open("GET", optionsJSON, true);
   req.onload = onLoad;
@@ -131,7 +141,7 @@ function init() {
 function update() {
     var filteredList= [];
 
-    var words = $('#search').val().toLowerCase().split(/ +/).filter(Boolean);
+    var words = searchField.value.toLowerCase().split(/ +/).filter(Boolean);
     //console.log(words);
     //console.log(optionsList);
 
@@ -179,10 +189,9 @@ function update() {
     document.getElementById("info").innerHTML = filterList.length;  
 }
 
-$('#search').on('input', function() {
-  update();
-});
-$( document ).ready( init() )
+// Call the init function once the body is loaded.
+document.getElementsByTagName("body")[0].onload = init;
+
 </script>
 
 </body>
