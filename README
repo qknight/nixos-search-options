@@ -1,3 +1,6 @@
 # motivation
 nixos-search-options a interactive search utility, written in javascript, serving via webserver, making it easy for admins/developers to find the options they need for their services.
 
+# nixpkgs version
+This project is based on the following nixpkgs pull request:
+https://github.com/NixOS/nixpkgs/pull/3811
