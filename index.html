@@ -1,9 +1,5 @@
 <html>
 <head>
-<!--  
-<script type="text/javascript" src="bootstrap.min.js"></script> 
-  <link rel="stylesheet" href="bootstrap.min.css" />
--->
 
 <link rel="stylesheet" href="bootstrap-responsive.min.css" />
 <link rel="stylesheet" href="nixos-site.css" type="text/css" />
@@ -235,6 +231,14 @@ function populate() {
 }
 
 function init() {
+  // see http://stackoverflow.com/questions/646628/how-to-check-if-a-string-startswith-another-string
+  if (typeof String.prototype.startsWith != 'function') {
+    // see below for better implementation!
+    String.prototype.startsWith = function (str){
+      return this.indexOf(str) == 0;
+    };
+  }
+
   // Find the search field in the document.
   searchField = document.getElementById("search");
 
