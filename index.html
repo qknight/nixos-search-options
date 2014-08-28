@@ -126,6 +126,14 @@ function ppNix(indent, v) {
       return res + ']';
     }
 
+    // Some example attribute are using the literalExample function to wrap
+    // their content as it cannot be serialize properly. So if we detect such
+    // example, escape characters and return the text without pretty-printing.
+    if (v._type == "literalExample") {
+      v = ((v.text || '') + '').replace('<', '&lt;').replace('>', '&gt;');
+      return v;
+    }
+
     // Print an attribute set.  Always indent the first line
     var attrset = Object.keys(v);
     len = attrset.length;
