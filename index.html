@@ -1,5 +1,11 @@
-<html>
+<!DOCTYPE html>
+
+<html lang="en">
+
 <head>
+<title>NixOS Linux</title>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 
 <link rel="stylesheet" href="bootstrap-responsive.min.css" />
 <link rel="stylesheet" href="nixos-site.css" type="text/css" />
@@ -18,8 +24,6 @@
    vertical-align: baseline;
 };
 </style>
-
-
 </head>
  <body>
 
@@ -28,22 +32,22 @@
         <div class="container">
 <h1> Search NixOS options</h1>
 
-<div id="obbb">
-<div id="bbb">
 <input name="query" type="text" class="search-query span3" placeholder="Search by name or description" id="search" value="" autofocus="autofocus" style="background: #fff url('share-sprite-new.png') no-repeat -269px -92px !important; padding-left: 22px !important;width: 288px; height: 22px; margin: 0px"> <div id="info">?</div> (options in selection)
 </div>
 <br>
-<input type="checkbox" id="nameCB" checked="true" onchange="update()">path,
-<input type="checkbox" id="descriptionCB" checked="true" onchange="update()">description,
-<input type="checkbox" id="defaultCB" checked="true" onchange="update()">default,
-<input type="checkbox" id="exampleCB" checked="true" onchange="update()">example,
-<input type="checkbox" id="declarationsCB" checked="true" onchange="update()">declarations
+<input type="checkbox" id="nameCB" checked="checked" onchange="update()">path,
+<input type="checkbox" id="descriptionCB" checked="checked" onchange="update()">description,
+<input type="checkbox" id="defaultCB" checked="checked" onchange="update()">default,
+<input type="checkbox" id="exampleCB" checked="checked" onchange="update()">example,
+<input type="checkbox" id="declarationsCB" checked="checked" onchange="update()">declarations
+</div>
 </div>
 
 <br>
 <br>
 
-<div id="result"></a>
+<div id="result">
+</div>
 
 <script type="text/javascript">
 
