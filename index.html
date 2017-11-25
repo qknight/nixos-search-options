@@ -16,26 +16,32 @@
     <script type="text/javascript" src="bootstrap.min.js"></script>
     <link rel="stylesheet" href="bootstrap.min.css" />
     <link rel="stylesheet" href="bootstrap-responsive.min.css" />
-    <link rel="stylesheet" href="nixos-site.css" type="text/css" />
-    <link rel="stylesheet" href="font-awesome.css" />
-    <link rel="shortcut icon" type="image/png" href="/favicon.png" />
-
+    <style> 
+    legend.green-color a, legend.green-color a:hover, legend.green-color a:focus {
+      text-decoration: none;
+    }
+    </style>
+    
   </head>
 
   <body>
-
   
+    <div class="container main"> <div class="page-header">
+          <h1>Search nixcloud options</h1>
+    </div>
+    
+    <div id="breadcrumb"></div>
 
-    <div class="container main">        <div class="page-header">
-          <h1>Search NixOS options</h1>
-        </div>
+    <hr>
+    a link for hoover underline javascript hacking<br>
+    <a onClick="setBreadcrumb('nixcloud');">nixcloud</a>
+    <a onClick="setBreadcrumb('nixcloud.email')">.email</a> 
+    <br>
+    <hr>
+
 <p>
-  <input name='query' type='text' class='search-query span3'
-         placeholder='Search by name or description'
-         id='search' value='' autofocus='autofocus'/>
+  <input name='query' type='text' class='search-query span9' placeholder='Search by name or description' id='search' value='' autofocus='autofocus'/>
 </p>
-
-<hr />
 
 <p><em id='how-many'>Loading…</em></p>
 
@@ -137,12 +143,51 @@ function updateTable() {
   $('#results-wrapper').show();
 };
 
+// mode:
+// nixcloud.email
+// nixcloud.
+
+
+// filter all `nixcloud.`
+// Object.keys(optionData).filter(function (o) { return o.startsWith('nixcloud.') })
+
+// filter all webservices top level elements as `nixcloud.webservices.leaps` for example
+// Object.keys(optionData).filter(function (o) { return o.match('nixcloud\.webservices\.[^\.]*$') })
+
+
+function setBreadcrumb(crumb) {
+  v = crumb.trim().toLowerCase().split('.');
+  
+  var t = `
+   <font size="7pt" color="#ff5900"> &gt; </font>
+    <a onClick="setBreadcrumb('')"><font size="7pt" >` + "all" + `</font></a>
+  `
+  var f = "";
+  var history = "";
+  for (i=0; i<v.length; ++i) {
+    var element = v[i];
+    if (element === "") continue;
+    if (i == 0)    
+      history = element;
+    else
+      history += ("." + element);
+    f +=
+    `
+    <font size="7pt" color="#ff5900"> &gt; </font>
+    <a onClick="setBreadcrumb('` + history +`')"><font size="7pt" >` + element + `</font></a>
+    `
+  }
+  
+  $('#breadcrumb').html(t + f)
+}
+
 function refilter() {
   var options = Object.keys(optionData);
 
   results = options;
 
-  var words = $('#search').val().toLowerCase().split(/ +/).filter(Boolean);
+  var words = $('#search').val().toLowerCase() + " nixcloud";
+  words = words.split(/ +/).filter(Boolean);
 
   if (words.length > 0) {
     results = results.filter(function (optName) {
@@ -329,9 +374,11 @@ $.ajax({
     var query = document.location.hash.replace(/^#/, '').replace(/\+/, ' ');
     if (query.length && query.length > 0 ){ $('#search').val(query); }
     refilter();
+    setBreadcrumb("");
 
     $('#search').on('input', function() {
       refilter();
+      setBreadcrumb("");
     });
   }
 });
