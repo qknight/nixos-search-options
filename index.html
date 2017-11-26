@@ -30,15 +30,15 @@
           <h1>Search nixcloud options</h1>
     </div>
     
+    <p>
     <div id="breadcrumb"></div>
-
-    <hr>
-    a link for hoover underline javascript hacking<br>
-    <a onClick="setBreadcrumb('nixcloud');">nixcloud</a>
-    <a onClick="setBreadcrumb('nixcloud.email')">.email</a> 
-    <br>
-    <hr>
-
+    </p>
+    <p>
+    <div id="buttons"></div>
+    </p>
+    <p>
+    <div id="webserviceInfo"></div>
+    </p>
 <p>
   <input name='query' type='text' class='search-query span9' placeholder='Search by name or description' id='search' value='' autofocus='autofocus'/>
 </p>
@@ -154,13 +154,16 @@ function updateTable() {
 // filter all webservices top level elements as `nixcloud.webservices.leaps` for example
 // Object.keys(optionData).filter(function (o) { return o.match('nixcloud\.webservices\.[^\.]*$') })
 
+var mode = "";
 
 function setBreadcrumb(crumb) {
   v = crumb.trim().toLowerCase().split('.');
-  
+  mode = v[0];
+
+//   console.log(mode)
+
   var t = `
-   <font size="7pt" color="#ff5900"> &gt; </font>
-    <a onClick="setBreadcrumb('')"><font size="7pt" >` + "all" + `</font></a>
+    <a onClick="setBreadcrumb('')"><font size="7pt" >` + "nixcloud" + `</font></a>
   `
   var f = "";
   var history = "";
@@ -179,12 +182,25 @@ function setBreadcrumb(crumb) {
   }
   
   $('#breadcrumb').html(t + f)
+  refilter()
 }
 
 function refilter() {
   var options = Object.keys(optionData);
-
-  results = options;
+  
+  if (mode == "webservices") {
+    results = Object.keys(optionData).filter(function (o) { return o.match('nixcloud\.webservices\.[^\.]*$') })
+    $('#webserviceInfo').html("hello world")
+  } else {
+    results = Object.keys(optionData).filter(function (o) { return o.startsWith('nixcloud.' + mode) })
+    $('#webserviceInfo').html("")
+  }
+    
+  if (mode !== "") { 
+//     $('#buttons').css('visibility', 'hidden');
+  } else {
+//     $('#buttons').css('visibility', 'visible');
+  }
 
   var words = $('#search').val().toLowerCase() + " nixcloud";
   words = words.split(/ +/).filter(Boolean);
@@ -380,6 +396,23 @@ $.ajax({
       refilter();
       setBreadcrumb("");
     });
+    
+    // generate buttons
+    var keys = Object.keys(optionData).filter(function (o) { return o.startsWith('nixcloud.') })
+    
+    const map1 = keys.map(x => x.split('.')[1]);
+    
+    var uniqueItems = Array.from(new Set(map1)).sort()
+
+    var buttonsHTML = "";
+    uniqueItems.forEach(function(element) {
+      console.log(element);
+      buttonsHTML +=`
+        <button type="button" class="btn" onClick="setBreadcrumb('` + element + `')">`+ element + `</button>
+      `
+    });
+
+      $('#buttons').html(buttonsHTML);
   }
 });
 
@@ -389,8 +422,8 @@ $.ajax({
       <div class="footer">
         <hr />
         <center>
-        <small class="muted">            Last changed on 2017-01-01            · <a href="https://github.com/NixOS/nixos-homepage/blob/master/nixos/options.tt">Page source</a>
-            · <a href="https://github.com/NixOS/nixos-homepage/edit/master/nixos/options.tt">Edit</a>        </small>
+        <small class="muted">            Last changed on 2017-01-01            · <a href="https://github.com/qknight/nixos-search-options">Page source</a>
+               </small>
         </center>
       </div>
 
