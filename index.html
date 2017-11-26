@@ -3,7 +3,7 @@
 <html lang="en">
 
   <head>
-    <title>Search NixOS options</title>
+    <title>Browse NixOS/nixcloud options</title>
 
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
@@ -17,9 +17,32 @@
     <link rel="stylesheet" href="bootstrap.min.css" />
     <link rel="stylesheet" href="bootstrap-responsive.min.css" />
     <style> 
-    legend.green-color a, legend.green-color a:hover, legend.green-color a:focus {
+    .tt.a, .tt.a:hover, .tt.a:focus {
       text-decoration: none;
     }
+    .nounderline{text-decoration: none !important}
+    .meta {
+      background-color: #d2e1d2;
+      border-radius: 6px;
+      padding: 5px;
+      margin-bottom: 5px;
+    }
+    .build {
+      background-color: #d6e9ff;
+      border-radius: 6px;
+      padding: 5px;
+      margin-bottom: 5px;
+    }
+    .notifications {
+      background-color: #ead6ff;
+      border-radius: 6px;
+      padding: 5px;
+      margin-bottom: 5px;
+    }
+    .search-details {
+      background-color: #eaeaeab3;
+    }
+    
     </style>
     
   </head>
@@ -27,7 +50,7 @@
   <body>
   
     <div class="container main"> <div class="page-header">
-          <h1>Search nixcloud options</h1>
+          <h1>Browse NixOS/nixcloud options</h1>
     </div>
     
     <p>
@@ -143,24 +166,11 @@ function updateTable() {
   $('#results-wrapper').show();
 };
 
-// mode:
-// nixcloud.email
-// nixcloud.
-
-
-// filter all `nixcloud.`
-// Object.keys(optionData).filter(function (o) { return o.startsWith('nixcloud.') })
-
-// filter all webservices top level elements as `nixcloud.webservices.leaps` for example
-// Object.keys(optionData).filter(function (o) { return o.match('nixcloud\.webservices\.[^\.]*$') })
-
 var mode = "";
 
 function setBreadcrumb(crumb) {
   v = crumb.trim().toLowerCase().split('.');
-  mode = v[0];
-
-//   console.log(mode)
+  mode = crumb;
 
   var t = `
     <a onClick="setBreadcrumb('')"><font size="7pt" >` + "nixcloud" + `</font></a>
@@ -170,16 +180,20 @@ function setBreadcrumb(crumb) {
   for (i=0; i<v.length; ++i) {
     var element = v[i];
     if (element === "") continue;
-    if (i == 0)    
+    if (i == 0)
       history = element;
     else
       history += ("." + element);
     f +=
     `
-    <font size="7pt" color="#ff5900"> &gt; </font>
+    <font size="7pt" color="#ff5900">.</font>
     <a onClick="setBreadcrumb('` + history +`')"><font size="7pt" >` + element + `</font></a>
     `
   }
+  
+  f+=`
+    <font size="7pt" color="#ff5900" onClick="setBreadcrumb('')"> X</font>
+    `
   
   $('#breadcrumb').html(t + f)
   refilter()
@@ -190,16 +204,55 @@ function refilter() {
   
   if (mode == "webservices") {
     results = Object.keys(optionData).filter(function (o) { return o.match('nixcloud\.webservices\.[^\.]*$') })
-    $('#webserviceInfo').html("hello world")
+    $('#webserviceInfo').html(`
+      <b>NOTE to aszlig: please click this link below, and ignore the 3 option name  references in the 'Option search' as i won't implement that link clicking in this code base.</b>
+      <div class="linkGroup">
+      <a class="nounderline" onClick="setBreadcrumb('')">nixcloud</a><a class="nounderline" onClick="setBreadcrumb('webservices')">.webservices</a><a class="nounderline" onClick="setBreadcrumb('webservices.leaps')">.leaps</a>
+      </div>
+    `)
+  } else if (mode.startsWith("webservices.")) {
+    $('#webserviceInfo').html(`
+      <p>` + optionData['nixcloud.webservices.leaps'].description + `</p>
+      <div class="meta">
+        <p>maintainer: <a>joachim schiele &lt;js@lastlog.de&gt;</a></p>
+        <p>license: <a>GPL v2</a></p>
+        <p>homepage: <a>https://www.w3schools.com/bootstrap/bootstrap_ref_css_buttons.asp</a></p>
+      </div>
+      <div class="build">
+        <p>build status: <a>master (all 2 tests pass)</a>, <a>17.09 (1 test fails, 1 test passes)</a></p>
+        <p>latest service update: <a>56 days ago</a></p>
+        <p>dependencies: <a>apache, mysql, redis</a></p>
+        <p>active instances: <a>23</a></p>
+        <p>declarations: <a>`+optionData['nixcloud.webservices.leaps'].declarations+`</a></p>
+      </div>
+      <p>
+        <button type="button" class="btn-success" onClick="setBreadcrumb('` + mode + `')">instantiate to nixcloud</button><br>
+      </p>
+      <p>
+        <button type="button" class="btn-info" onClick="setBreadcrumb('` + mode + `')">take to nixcloud lab</button>
+      </p>
+      <h3>Notifications</h3>
+      <div class="notifications">
+        <p>recent changes break thingy things...</p>
+      </div>
+      <h3>Example usages</h3>
+      ...
+      <h3>CVEs</h3>
+      ...
+      <h3>Search options</h3>
+    `)
+
+    results = Object.keys(optionData).filter(function (o) { return o.startsWith('nixcloud.' + mode + ".") })
+    
   } else {
     results = Object.keys(optionData).filter(function (o) { return o.startsWith('nixcloud.' + mode) })
     $('#webserviceInfo').html("")
   }
     
   if (mode !== "") { 
-//     $('#buttons').css('visibility', 'hidden');
+    $('#buttons').css('visibility', 'hidden');
   } else {
-//     $('#buttons').css('visibility', 'visible');
+    $('#buttons').css('visibility', 'visible');
   }
 
   var words = $('#search').val().toLowerCase() + " nixcloud";
@@ -361,6 +414,7 @@ function showOption() {
   if ('example' in opt)
     $('.example', details).empty().addClass('pre').text(ppNix('', opt.example));
 
+  // FIXME: needs to be fixed for nixcloud-webservices
   if (opt.declarations.length > 0) {
     var res = $('.declared-in', details);
     res.empty();
@@ -412,7 +466,7 @@ $.ajax({
       `
     });
 
-      $('#buttons').html(buttonsHTML);
+    $('#buttons').html(buttonsHTML);
   }
 });
 
